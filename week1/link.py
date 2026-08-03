@@ -1,14 +1,16 @@
 """
 link.py — 문서에 글로만 적혀 있는 조항 인용을 진짜 링크로 바꾼다.
 
-    python3 link.py          바꿀 곳을 보여주기만 한다 (문서는 그대로)
-    python3 link.py --적용    docs/ 문서에 링크를 써넣는다
+    python3 link.py
+
+docs/ 문서에 링크를 써넣고, 조각과 색인까지 다시 만든다.
 
 규정 문서는 서로를 가리킨다. "별표 1에서 정하는 바에 따른다" 같은 문장이 그것이다.
 사람은 그 말을 보고 별표 1을 찾아가지만, 검색은 그 화살표를 따라가지 못한다.
 이 코드는 문장에 적힌 인용을 컴퓨터가 따라갈 수 있는 링크로 바꾼다. 문장 자체는 바꾸지 않는다.
 """
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -86,7 +88,6 @@ def 링크걸기(줄, 이파일, 직전규정파일):
     return 결과, 바뀐것, 직전규정파일
 
 
-적용 = "--적용" in sys.argv
 전체 = 0
 
 for 문서 in sorted(원본폴더.glob("*.md")):
@@ -106,11 +107,15 @@ for 문서 in sorted(원본폴더.glob("*.md")):
         for 번호, 조항, 주소 in 문서변경:
             print(f"  {번호:>3}행  {조항:<8} → {주소}")
         전체 += len(문서변경)
-        if 적용:
-            문서.write_text("\n".join(새줄들) + "\n", encoding="utf-8")
+        문서.write_text("\n".join(새줄들) + "\n", encoding="utf-8")
 
 print()
-if 적용:
-    print(f"링크 {전체}곳을 문서에 써넣었습니다. split.py 와 index.py 를 다시 실행하세요.")
+if 전체:
+    print(f"링크 {전체}곳을 문서에 써넣었습니다.")
 else:
-    print(f"링크로 바꿀 곳 {전체}곳을 찾았습니다. 실제로 바꾸려면 --적용 을 붙이세요.")
+    print("새로 바꿀 인용이 없습니다. (이미 링크가 걸려 있습니다)")
+
+# 문서가 바뀌었으니 조각과 색인도 다시 만든다
+for 스크립트 in ("split.py", "index.py"):
+    print(flush=True)
+    subprocess.run([sys.executable, 스크립트], check=True)
