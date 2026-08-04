@@ -1,13 +1,17 @@
 """
-link.py — 문서에 글로만 적혀 있는 조항 인용을 진짜 링크로 바꾼다.
+link.py — 조각에 글로만 적혀 있는 조항 인용을 진짜 링크로 바꾼다.
 
     python3 link.py
 
-docs/ 문서에 링크를 써넣고, 조각과 색인까지 다시 만든다.
+split.py 가 만든 chunks/ 조각에 링크를 써넣고, 색인을 다시 만든다.
+docs/ 원본 문서는 건드리지 않는다.
 
 규정 문서는 서로를 가리킨다. "별표 1에서 정하는 바에 따른다" 같은 문장이 그것이다.
 사람은 그 말을 보고 별표 1을 찾아가지만, 검색은 그 화살표를 따라가지 못한다.
-이 코드는 문장에 적힌 인용을 컴퓨터가 따라갈 수 있는 링크로 바꾼다. 문장 자체는 바꾸지 않는다.
+이 코드는 조각에 적힌 인용을 컴퓨터가 따라갈 수 있는 링크로 바꾼다. 문장 자체는 바꾸지 않는다.
+
+split.py 를 다시 실행하면 조각이 새로 만들어져 링크가 사라진다.
+그때는 link.py 를 다시 실행한다.
 """
 import re
 import subprocess
@@ -15,6 +19,7 @@ import sys
 from pathlib import Path
 
 원본폴더 = Path("docs")
+조각폴더 = Path("chunks")
 
 # 「연장근로 및 휴일근로 운영규정」 별표 1   /   같은 규정 제3조   /   제5조
 인용찾기 = re.compile(
@@ -51,7 +56,7 @@ for 문서 in sorted(원본폴더.glob("*.md")):
                 조항주소[(문서.name, 조항키(머리.group(1)))] = f"{문서.name}#{앵커(제목)}"
 
 
-# ── 2. 문서를 한 줄씩 보며 인용을 링크로 바꾼다 ────────────────────
+# ── 2. 조각을 한 줄씩 보며 인용을 링크로 바꾼다 ────────────────────
 def 링크걸기(줄, 이파일, 직전규정파일):
     바뀐것 = []
 
@@ -88,34 +93,38 @@ def 링크걸기(줄, 이파일, 직전규정파일):
     return 결과, 바뀐것, 직전규정파일
 
 
+조각목록 = sorted(조각폴더.glob("*.md"))
+if not 조각목록:
+    sys.exit("chunks/ 가 비어 있습니다. 먼저 python3 split.py 를 실행하세요.")
+
 전체 = 0
 
-for 문서 in sorted(원본폴더.glob("*.md")):
-    줄들 = 문서.read_text(encoding="utf-8").splitlines()
-    새줄들, 문서변경, 직전규정파일 = [], [], None
+for 조각 in 조각목록:
+    이파일 = 조각.stem.rsplit("-", 1)[0] + ".md"
+    줄들 = 조각.read_text(encoding="utf-8").splitlines()
+    새줄들, 조각변경, 직전규정파일 = [], [], None
 
-    for 번호, 줄 in enumerate(줄들, start=1):
+    for 줄 in 줄들:
         if 줄.startswith("#"):          # 제목 줄은 그대로 둔다
             새줄들.append(줄)
             continue
-        새줄, 바뀐것, 직전규정파일 = 링크걸기(줄, 문서.name, 직전규정파일)
+        새줄, 바뀐것, 직전규정파일 = 링크걸기(줄, 이파일, 직전규정파일)
         새줄들.append(새줄)
-        문서변경 += [(번호, 조항, 주소) for 조항, 주소 in 바뀐것]
+        조각변경 += 바뀐것
 
-    if 문서변경:
-        print(f"{문서.name}")
-        for 번호, 조항, 주소 in 문서변경:
-            print(f"  {번호:>3}행  {조항:<8} → {주소}")
-        전체 += len(문서변경)
-        문서.write_text("\n".join(새줄들) + "\n", encoding="utf-8")
+    if 조각변경:
+        print(f"{조각.name}")
+        for 조항, 주소 in 조각변경:
+            print(f"  {조항:<8} → {주소}")
+        전체 += len(조각변경)
+        조각.write_text("\n".join(새줄들) + "\n", encoding="utf-8")
 
 print()
 if 전체:
-    print(f"링크 {전체}곳을 문서에 써넣었습니다.")
+    print(f"링크 {전체}곳을 조각에 써넣었습니다. (docs/ 원본은 그대로입니다)")
 else:
     print("새로 바꿀 인용이 없습니다. (이미 링크가 걸려 있습니다)")
 
-# 문서가 바뀌었으니 조각과 색인도 다시 만든다
-for 스크립트 in ("split.py", "index.py"):
-    print(flush=True)
-    subprocess.run([sys.executable, 스크립트], check=True)
+# 조각이 바뀌었으니 색인도 다시 만든다
+print(flush=True)
+subprocess.run([sys.executable, "index.py"], check=True)

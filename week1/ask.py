@@ -1,7 +1,7 @@
 """
 ask.py — 색인으로 조각을 찾고, 그 조각이 가리키는 조각까지 따라가서 AI에게 준다.
 
-    python3 ask.py "연장근로 규칙 알려줘"
+    python3 ask.py "연장근로수당 기준 알려줘"
     python3 ask.py --링크무시 "…"     링크를 따라가지 않는다 (link.py 적용 전과 같은 상태)
     python3 ask.py --검색만 "…"       AI를 부르지 않고 검색 결과만 본다
 
@@ -81,7 +81,7 @@ def 물어보기(근거, 질문):
 인자 = sys.argv[1:]
 검색만 = "--검색만" in 인자
 링크무시 = "--링크무시" in 인자
-질문 = " ".join(a for a in 인자 if not a.startswith("--")) or "연장근로 규칙 알려줘"
+질문 = " ".join(a for a in 인자 if not a.startswith("--")) or "연장근로수당 기준 알려줘"
 
 print(f"[질문] {질문}\n")
 
