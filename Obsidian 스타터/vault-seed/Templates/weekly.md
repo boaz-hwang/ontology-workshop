@@ -1,0 +1,11 @@
+# #weekly 
+- Youtube
+	- [ ] 
+- Camp
+	- [ ] 
+- Bookey
+	- [ ] 
+- Community
+	- [ ] 
+- Course
+	- [ ] 

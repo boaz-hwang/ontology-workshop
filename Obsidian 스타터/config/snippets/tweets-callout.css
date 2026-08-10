@@ -1,0 +1,4 @@
+.callout[data-callout="tweets"] {
+  --callout-color: 34, 197, 94;
+  --callout-icon: lucide-twitter;
+}

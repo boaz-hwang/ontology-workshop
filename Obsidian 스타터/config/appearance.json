@@ -1,0 +1,8 @@
+{
+  "accentColor": "#2a347e",
+  "theme": "moonstone",
+  "cssTheme": "AnuPpuccin",
+  "enabledCssSnippets": [
+    "color-extend"
+  ]
+}
