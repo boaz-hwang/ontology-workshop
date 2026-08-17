@@ -4,7 +4,7 @@ setup_wiki.py — 실습용 위키 폴더(wiki/)를 만든다.
     python3 setup_wiki.py            처음 만들 때
     python3 setup_wiki.py --force    기존 파일을 덮어쓰고 다시 만들 때
 
-week1/docs/ 의 규정 문서 전부를 wiki/sources/ 로 복사하고,
+docs/ 의 규정 문서 전부를 wiki/sources/ 로 복사하고,
 pages/ facts/ decisions/ templates/ 폴더와 기본 파일을 만든다.
 git 저장소도 만들어 씨앗 커밋을 남긴다. 이후 Claude Code 가 만든
 변경은 wiki/ 안에서 git diff 로 확인할 수 있다.
@@ -20,7 +20,7 @@ import sys
 from pathlib import Path
 
 기준폴더 = Path(__file__).resolve().parent
-원본폴더 = 기준폴더 / "week1" / "docs"
+원본폴더 = 기준폴더 / "docs"
 위키폴더 = 기준폴더 / "wiki"
 강제 = "--force" in sys.argv
 
@@ -120,7 +120,7 @@ if git and (위키폴더 / ".git").exists():
         )
 
 print(f"wiki/ 를 만들었습니다. ({위키폴더})")
-print(f"  sources/   규정 문서 {len(문서들)}개 (week1/docs 에서 복사)")
+print(f"  sources/   규정 문서 {len(문서들)}개 (docs/ 에서 복사)")
 print("  pages/     비어 있음 — Claude Code 가 채울 공간")
 print("  facts/     비어 있음 — templates/facts.csv 스키마를 따른다")
 print("  decisions/ open-questions.md 뼈대")
@@ -131,3 +131,5 @@ print("  1. wiki/CLAUDE.md 를 직접 만들어 위키 규칙을 붙여 넣으�
 print("  2. cd wiki 후 claude 를 실행해 pages/ 생성을 요청하세요.")
 print("  3. 결과는 git -C wiki status 와 git -C wiki diff 로 확인합니다.")
 print("  4. python3 validate_wiki.py 로 위키가 규칙을 지켰는지 검사합니다.")
+print("  5. 실습을 마치면 git -C wiki add -A 와 git -C wiki commit 으로 기록합니다.")
+print("     이 커밋이 다음 실습의 기준선이 됩니다.")

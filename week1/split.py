@@ -3,12 +3,12 @@ split.py — 규정 문서를 조항 단위 '조각'으로 나눈다.
 
     python3 split.py
 
-docs/ 안의 문서를 읽어 빈 줄을 기준으로 자르고, chunks/ 에 조각 파일로 저장한다.
+저장소 루트 docs/ 의 문서를 읽어 빈 줄을 기준으로 자르고, chunks/ 에 조각 파일로 저장한다.
 이 규정 문서들은 조항 하나가 빈 줄로 구분되어 있어서, 조각 하나 = 조항 하나가 된다.
 """
 from pathlib import Path
 
-원본폴더 = Path("docs")
+원본폴더 = Path("../docs")
 조각폴더 = Path("chunks")
 
 # 조각 폴더를 비우고 새로 만든다

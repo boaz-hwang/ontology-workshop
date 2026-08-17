@@ -4,7 +4,7 @@ link.py — 조각에 글로만 적혀 있는 조항 인용을 진짜 링크로 
     python3 link.py
 
 split.py 가 만든 chunks/ 조각에 링크를 써넣고, 색인을 다시 만든다.
-docs/ 원본 문서는 건드리지 않는다.
+저장소 루트 docs/ 원본 문서는 건드리지 않는다.
 
 규정 문서는 서로를 가리킨다. "별표 1에서 정하는 바에 따른다" 같은 문장이 그것이다.
 사람은 그 말을 보고 별표 1을 찾아가지만, 검색은 그 화살표를 따라가지 못한다.
@@ -18,7 +18,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-원본폴더 = Path("docs")
+원본폴더 = Path("../docs")
 조각폴더 = Path("chunks")
 
 # 「연장근로 및 휴일근로 운영규정」 별표 1   /   같은 규정 제3조   /   제5조
