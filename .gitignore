@@ -1,5 +1,7 @@
 week1/chunks/
 week1/index.tsv
+week1/vectors/
+week1/vectors.tsv
 .DS_Store
 __pycache__/
 wiki/
