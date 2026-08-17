@@ -3,7 +3,7 @@ link.py — 조각에 글로만 적혀 있는 조항 인용을 진짜 링크로 
 
     python3 link.py
 
-split.py 가 만든 chunks/ 조각에 링크를 써넣고, 색인을 다시 만든다.
+split.py 가 만든 chunks/ 조각에 링크를 써넣는다.
 저장소 루트 docs/ 원본 문서는 건드리지 않는다.
 
 규정 문서는 서로를 가리킨다. "별표 1에서 정하는 바에 따른다" 같은 문장이 그것이다.
@@ -14,7 +14,6 @@ split.py 를 다시 실행하면 조각이 새로 만들어져 링크가 사라�
 그때는 link.py 를 다시 실행한다.
 """
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -124,7 +123,3 @@ if 전체:
     print(f"링크 {전체}곳을 조각에 써넣었습니다. (docs/ 원본은 그대로입니다)")
 else:
     print("새로 바꿀 인용이 없습니다. (이미 링크가 걸려 있습니다)")
-
-# 조각이 바뀌었으니 색인도 다시 만든다
-print(flush=True)
-subprocess.run([sys.executable, "index.py"], check=True)
